@@ -1,14 +1,7 @@
 import * as fs from 'fs';
 import * as readline from 'readline';
 
-const regex = /mul\((\d+),(\d+)\)/g; // Regex to match patterns like mul(num1,num2)
-
-const matches: { num1: number; num2: number }[] = [];
-
-
-
-console.log(matches);
-
+const regex = /(mul\((\d+),(\d+)\)|do\(\)|don't\(\))/g;
 
 const filePath = "input.txt"
 const fileStream = fs.createReadStream(filePath);
@@ -21,17 +14,23 @@ const rl = readline.createInterface({
 let board: number[][] = [];
 
 let answer = 0;
+let flag = 1;
 rl.on("line", (line) => {
     let match: RegExpExecArray | null;
     while ((match = regex.exec(line)) !== null) {
-        const num1 = parseInt(match[1], 10); // Extract num1 and convert to number
-        const num2 = parseInt(match[2], 10); // Extract num2 and convert to number
-        answer += num1 * num2;
-        console.log("parsed", num1, num2);
+        if (match[1].startsWith("mul")) {
+            const [, , num1, num2] = match;
+            answer += parseInt(num1, 10) * parseInt(num2, 10) * flag;
+        } else if (match[1].startsWith("do()")) {
+            flag = 1;
+        } else if (match[1].startsWith("don't()")) {
+            flag = 0;
+        }
     }
 })
 
+
 rl.on("close", () => {
-    console.log(answer)
+    console.log(answer);
 });
 
