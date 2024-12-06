@@ -9,11 +9,84 @@ const rl = readline.createInterface({
     crlfDelay: Infinity,
 });
 
+const board: string[][] = [];
+
+
 let answer = 0;
 rl.on("line", (line) => {
-
+    board.push(line.split(""));
 });
 
+function hasLoop() {
+    const N = board.length;
+    const M = board[0].length;
+    const visited = Array.from({ length: N }, () =>
+        Array.from({ length: M }, () => Array(4).fill(false))
+    );
+    let [guardR, guardC] = [NaN, NaN];
+    for(let i = 0 ; i < N ; ++i) {
+        for(let j = 0 ; j < M ; ++j) {
+            if(board[i][j]=='^') {
+                guardR = i;
+                guardC = j;
+            }
+        }
+    }
+
+    let dir: number = 0;
+    const dispR: number[] = [-1,0,1,0];
+    const dispC: number[] = [0,1,0,-1];
+
+    while(true) {
+        // console.log(guardR, guardC, visited[guardR][guardC])
+        if(visited[guardR][guardC][dir]) {
+            return true;
+        }
+        visited[guardR][guardC][dir] = true;
+        const newR = guardR + dispR[dir];
+        const newC = guardC + dispC[dir];
+        if(newR < 0 || newR >= N) break;
+        if(newC < 0 || newC >= M) break;
+        if(board[newR][newC]=='#') {
+            dir = (dir+1) % 4;
+        } else {
+            [guardR, guardC] = [newR, newC];
+        }
+        
+        /*for(let i=0;i<N;++i) {
+            for(let j=0;j<M;++j) {
+                if(i==guardR && j==guardC) {
+                    process.stdout.write("G");
+                }
+                else if(visited[i][j]) {
+                    process.stdout.write("*");
+                } else {
+                    process.stdout.write(board[i][j]);
+                }
+            }
+            console.log();
+        }*/
+        
+    }
+    return false;
+}
 rl.on("close", () => {    
+    const N = board.length;
+    const M = board[0].length;
+
+    for(let i=0;i<N;++i) {
+        for(let j=0;j<M;++j) {
+            if(board[i][j] == '.') {
+                board[i][j] = '#';
+                if(hasLoop()) {
+                    ++answer;
+                    console.log(i, j);
+                }
+                board[i][j] = '.';
+                
+            }
+        }
+    }
+
     console.log(answer);
 });
