@@ -1,0 +1,10 @@
+---
+name: PLEASE DON'T REPORT
+about: SORRY, THIS IS A PRIVATE PROJECT.
+title: ''
+labels: ''
+assignees: ''
+
+---
+
+AGAIN, PLEASE DON'T REPORT. THANKS FOR YOUR UNDERSTANDING.
