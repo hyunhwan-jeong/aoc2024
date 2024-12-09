@@ -1,0 +1,441 @@
+\documentclass[letterpaper,landscape]{article}
+
+\usepackage[letterpaper,margin=1.0cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{minted}
+\usepackage{multicol}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\setlength{\columnsep}{1cm}      % adjust column spacing if desired
+\setlength{\columnseprule}{0.4pt} % add a vertical line between columns
+
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\footskip}{12pt} % adjust this value as needed
+
+
+% Line wrapping in minted code
+\setminted{breaklines=true,fontsize=\footnotesize}
+
+% Reduce spacing a bit
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+\setlength{\columnsep}{1cm}
+
+\begin{document}
+
+\begin{multicols*}{3}
+
+\section*{Rust Cheatsheet for CP}
+
+\subsection*{Basics}
+
+\begin{itemize}
+\item Declaring variables:
+\begin{minted}{rust}
+let x = 10; 
+let mut y = 20; 
+y = 30;
+let z: i32 = 100;
+\end{minted}
+
+\item References and borrowing:
+\begin{minted}{rust}
+// Immutable reference
+let a = 10;
+let ra = &a; // ra is a reference to a
+println!("{}", ra); // prints 10
+
+// Mutable reference
+let mut b = 10;
+let rb = &mut b; // mutable reference
+*rb += 5; 
+println!("{}", b); // prints 15
+\end{minted}
+
+\item Defining and calling functions:
+\begin{minted}{rust}
+// Define a function
+fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+// Call the function
+let sum = add(3, 4); 
+println!("{}", sum); // prints 7
+\end{minted}
+
+\end{itemize}
+
+\subsection*{Handling stdin/stout}
+\begin{itemize}
+\item Reading from stdin:
+\begin{minted}{rust}
+use std::io::*;
+let stdin = stdin();
+let mut input = stdin.lock().lines();
+\end{minted}
+
+\item Parsing inputs:
+\begin{minted}{rust}
+let line = input.next().unwrap().unwrap();
+let mut iter = line.split_whitespace();
+let n: usize = iter.next().unwrap().parse().unwrap();
+\end{minted}
+
+\item Printing output:
+\begin{minted}{rust}
+println!("{}", result);
+\end{minted}
+\end{itemize}
+
+\subsection*{Handling file input/output}
+\begin{itemize}
+\item Reading from a file:
+\begin{minted}{rust}
+use std::fs::File;
+use std::io::{BufRead, BufReader, Result};
+
+let file = File::open("input.txt")?;
+let reader = BufReader::new(file);
+
+for line_result in reader.lines() {
+    let line = line_result?; 
+    // process line...
+}
+\end{minted}
+
+\item Writing to a file:
+\begin{minted}{rust}
+use std::fs::File;
+use std::io::{Write, BufWriter, Result};
+
+let file = File::create("output.txt")?;
+let mut writer = BufWriter::new(file);
+writeln!(writer, "{}", result)?;
+\end{minted}
+\end{itemize}
+
+
+\subsection*{Data Structures}
+
+\begin{itemize}
+\item Arrays:
+\begin{minted}{rust}
+use std::io::*;
+
+fn main() -> Result<()> {
+    let stdin = stdin();
+    let mut input = stdin.lock().lines();
+    
+    let line = input.next().unwrap().unwrap();
+    let nums: Vec<usize> = line.split_whitespace()
+        .map(|x| x.parse().unwrap()).collect();
+    
+    let (n, m, l) = (nums[0], nums[1], nums[2]);
+
+    let mut vector = vec![0; n];
+    let mut matrix = vec![vec![0; m]; n];
+    let mut cube = vec![vec![vec![0; l]; m]; n];
+    Ok(())
+}
+\end{minted}
+
+\item Vectors:
+\begin{minted}{rust}
+let mut v = vec![1, 2, 3];
+v.push(x);
+v.pop();
+v.len();
+v.sort();
+v.sort_unstable();
+\end{minted}
+
+\item HashMap:
+\begin{minted}{rust}
+use std::collections::HashMap;
+let mut map = HashMap::new();
+map.insert(key, val);
+map.get(&key);
+map.contains_key(&key);
+\end{minted}
+
+\item HashSet:
+\begin{minted}{rust}
+use std::collections::HashSet;
+let mut set = HashSet::new();
+set.insert(x);
+set.contains(&x);
+\end{minted}
+
+\item VecDeque:
+\begin{minted}{rust}
+use std::collections::VecDeque;
+let mut dq = VecDeque::new();
+dq.push_back(x);
+dq.pop_front();
+\end{minted}
+
+\item Strings:
+\begin{minted}{rust}
+let s = String::from("abc");
+s.push('x');
+s.push_str("xyz");
+s.len();
+&s[i..j];
+\end{minted}
+
+\item Graph Adjacency List
+\begin{minted}{rust}
+let mut adj = vec![Vec::new(); n];
+adj[u].push((v, w)); // weighted
+adj[u].push(v);      // unweighted
+\end{minted}
+\end{itemize}
+
+\subsection*{Iteration \& Functional Methods}
+\begin{itemize}
+\item Basic loop:
+\begin{minted}{rust}
+for x in &v {
+    println!("{}", x);
+}
+\end{minted}
+
+\item Enumerate:
+\begin{minted}{rust}
+for (i, x) in v.iter().enumerate() {
+    // ...
+}
+\end{minted}
+
+\item Map, Filter:
+\begin{minted}{rust}
+let w: Vec<_> = v.iter().map(|x| x+1).collect();
+let evens: Vec<_> = v.iter().filter(|&&x| x%2==0).collect();
+\end{minted}
+
+\item Fold:
+\begin{minted}{rust}
+let sum = v.iter().fold(0, |acc, &x| acc + x);
+\end{minted}
+\end{itemize}
+
+\subsection*{Control Flow}
+\begin{minted}{rust}
+// if/else
+if x > 0 { ... } else { ... }
+
+// match
+match x {
+  0 => "zero",
+  1 => "one",
+  _ => "other"
+}
+
+// loops
+while condition { ... }
+loop { if condition { break; } }
+for i in 0..n { ... }
+\end{minted}
+
+\subsection*{Utilities \& Techniques}
+\begin{itemize}
+\item Sorting:
+\begin{minted}{rust}
+v.sort();
+v.sort_unstable();
+\end{minted}
+
+\item Binary Search:
+\begin{minted}{rust}
+match v.binary_search(&x) {
+    Ok(i) => i,
+    Err(i) => i
+}
+\end{minted}
+
+\item Conversions:
+\begin{minted}{rust}
+let x = num as i64;
+\end{minted}
+
+\item String to chars:
+\begin{minted}{rust}
+let chars: Vec<char> = s.chars().collect();
+\end{minted}
+\end{itemize}
+
+
+\subsection*{Ownership \& Borrowing}
+\begin{itemize}
+\item Borrowing:
+\begin{minted}{rust}
+fn process(v: &Vec<i32>) { ... }
+\end{minted}
+
+\item Mutable reference:
+\begin{minted}{rust}
+fn modify(v: &mut Vec<i32>) {
+    v.push(5);
+}
+\end{minted}
+
+\item Slices:
+\begin{minted}{rust}
+fn first_slice(s: &[i32]) -> i32 {
+    s[0]
+}
+\end{minted}
+\end{itemize}
+
+\subsection*{Common CP Patterns}
+\begin{itemize}
+\item Two-pointer:
+\begin{minted}{rust}
+let (mut l, mut r) = (0, v.len()-1);
+while l < r {
+    // ...
+}
+\end{minted}
+
+\item HashMap Counting:
+\begin{minted}{rust}
+*map.entry(x).or_insert(0) += 1;
+\end{minted}
+
+\item Prefix sums:
+\begin{minted}{rust}
+prefix[i] = prefix[i-1] + arr[i];
+\end{minted}
+
+\item BFS queue:
+\begin{minted}{rust}
+use std::collections::VecDeque;
+let mut q = VecDeque::new();
+q.push_back(start);
+\end{minted}
+\end{itemize}
+
+\subsection*{BFS Example (Unweighted Graph)}
+\begin{minted}{rust}
+use std::io::*;
+use std::collections::VecDeque;
+
+fn main() -> Result<()> {
+    let stdin = stdin();
+    let mut input = stdin.lock().lines();
+
+    let line = input.next().unwrap().unwrap();
+    let mut iter = line.split_whitespace();
+    let n: usize = iter.next().unwrap().parse().unwrap();
+    let m: usize = iter.next().unwrap().parse().unwrap();
+
+    let mut adj = vec![Vec::new(); n];
+    for _ in 0..m {
+        let line = input.next().unwrap().unwrap();
+        let mut it = line.split_whitespace();
+        let u: usize = it.next().unwrap().parse().unwrap();
+        let v: usize = it.next().unwrap().parse().unwrap();
+        adj[u].push(v);
+        adj[v].push(u); // if undirected
+    }
+
+    let start_line = input.next().unwrap().unwrap();
+    let start: usize = start_line.parse().unwrap();
+
+    let mut dist = vec![-1; n];
+    dist[start] = 0;
+    let mut q = VecDeque::new();
+    q.push_back(start);
+
+    while let Some(u) = q.pop_front() {
+        for &vv in &adj[u] {
+            if dist[vv] == -1 {
+                dist[vv] = dist[u] + 1;
+                q.push_back(vv);
+            }
+        }
+    }
+
+    for (i, d) in dist.iter().enumerate() {
+        println!("Node {}: {}", i, d);
+    }
+
+    Ok(())
+}
+\end{minted}
+
+%\columnbreak
+
+\subsection*{Dijkstra Example (Weighted Graph)}
+\begin{minted}{rust}
+use std::io::*;
+use std::collections::BinaryHeap;
+use std::cmp::Reverse;
+
+fn main() -> Result<()> {
+    let stdin = stdin();
+    let mut input = stdin.lock().lines();
+
+    let line = input.next().unwrap().unwrap();
+    let mut it = line.split_whitespace();
+    let n: usize = it.next().unwrap().parse().unwrap();
+    let m: usize = it.next().unwrap().parse().unwrap();
+
+    let mut adj = vec![Vec::new(); n];
+    for _ in 0..m {
+        let line = input.next().unwrap().unwrap();
+        let mut it = line.split_whitespace();
+        let u: usize = it.next().unwrap().parse().unwrap();
+        let v: usize = it.next().unwrap().parse().unwrap();
+        let w: i64 = it.next().unwrap().parse().unwrap();
+        adj[u].push((v, w));
+    }
+
+    let start_line = input.next().unwrap().unwrap();
+    let start: usize = start_line.parse().unwrap();
+
+    let mut dist = vec![i64::MAX; n];
+    dist[start] = 0;
+    let mut heap = BinaryHeap::new();
+    heap.push((Reverse(0), start));
+
+    while let Some((Reverse(d), u)) = heap.pop() {
+        if d > dist[u] { continue; }
+        for &(v, w) in &adj[u] {
+            let nd = d + w;
+            if nd < dist[v] {
+                dist[v] = nd;
+                heap.push((Reverse(nd), v));
+            }
+        }
+    }
+
+    for (i, d) in dist.iter().enumerate() {
+        println!("Node {}: {}", i, d);
+    }
+
+    Ok(())
+}
+\end{minted}
+
+\subsection*{Error Handling}
+\begin{itemize}
+\item Panic:
+\begin{minted}{rust}
+panic!("Error message");
+\end{minted}
+
+\item Expect on input:
+\begin{minted}{rust}
+let x: i32 = line.parse().expect("parse error");
+\end{minted}
+\end{itemize}
+
+\end{multicols*}
+
+\end{document}
