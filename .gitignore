@@ -1,2 +1,4 @@
 **.js
 **.txt
+.vscode/settings.json
+.gitignore
