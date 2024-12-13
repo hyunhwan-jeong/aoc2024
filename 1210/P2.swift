@@ -54,10 +54,6 @@ func bfsMatrix(matrix: [[Int]], startRow: Int, startCol: Int) -> Int {
             }
         }
     }
-    print(startRow, startCol, answer)
-    for l in cache {
-        print(l)
-    }
     return answer
 }
 
