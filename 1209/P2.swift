@@ -32,9 +32,7 @@ for (i, steps) in diskMap.enumerated() {
     n += steps
 }
 
-print(diskStatus)
 for disk in disks.reversed() {
-    print(disk)
     let targetCount = disk.end - disk.start 
 
     var startIdx: Int? = nil
