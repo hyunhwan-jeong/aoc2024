@@ -28,8 +28,8 @@ if let content = try? String(contentsOfFile: "input.txt", encoding: .utf8) {
     print("Failed to read the file.")
 }
 
-let WIDTH = 11
-let HEIGHT: Int = 7
+let WIDTH = 103
+let HEIGHT: Int = 101
 
 
 for _ in 1...100 {
